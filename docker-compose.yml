@@ -1,0 +1,35 @@
+version: '3'
+services:
+    hyperestraier:
+        image:
+            docker.io/goldenfishtiger/hyperestraier
+        container_name:
+            hyperestraier-alpha
+        build:
+            context:
+                .
+#           args:
+#               http_proxy: http://user_abc:password@proxy.example.com:8080/
+#               https_proxy: http://user_abc:password@proxy.example.com:8080/
+        ports:
+            - 8091:80
+        privileged:
+            true
+        environment:
+            TZ: Asia/Tokyo
+#           http_proxy: http://user_abc:password@proxy.example.com:8080/
+#           https_proxy: http://user_abc:password@proxy.example.com:8080/
+        volumes:
+            - pv:/var/lib/pv
+        command:
+            bash -c 'bash startup.sh && /sbin/init'
+
+# mkdir -p pv/hyperestraier/documents しておくこと
+# cp -a /usr/share/doc/git pv/hyperestraier/documents などで全文検索可能になる
+volumes:
+    pv:
+        driver_opts:
+            type: none
+            device: /root/docker/hyperestraier/pv
+            o: bind
+
